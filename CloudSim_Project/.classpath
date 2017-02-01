@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="modules/cloudsim-examples/src/main/java"/>
+	<classpathentry kind="src" path="modules/cloudsim/src/main/java"/>
+	<classpathentry kind="src" path="modules/cloudsim/src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/viveknair/Research/CloudSim/Software/commons-math3-3.6.1/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="/Users/viveknair/GIT/fss16dst/project/dependency/easymock-3.0 2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/viveknair/GIT/fss16dst/project/dependency/opencsv-3.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
