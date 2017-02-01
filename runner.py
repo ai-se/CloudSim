@@ -95,8 +95,8 @@ def generate_configuration():
     selection_policy = [1, 2, 3, 4]
     vm_types = [1, 2, 3, 4]
     host_types = [1, 2, 3, 4]
-    no_hosts = [10, 20, 30, 40, 50]
-    no_vms = [20, 40, 60, 80, 100]
+    no_hosts = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    no_vms = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
 
     collector_list = []
     for alloc_policy in allocation_policy:
@@ -110,7 +110,7 @@ def generate_configuration():
 
     import pickle
     pickle.dump(collector_list, open('Data/configs.p', 'w'))
-    print "Done"
+    print "Done ", len(collector_list)
 
 
 def append_data(line, filename="Data/collector.txt"):
@@ -125,9 +125,9 @@ def append_data(line, filename="Data/collector.txt"):
 def wrapper_run_configurations():
     import pickle
     configs = pickle.load(open('Data/configs.p', 'r'))
-    for config in configs:
+    for i, config in enumerate(configs):
         try:
-            print config
+            print i, config
             return_line = run_configuration(config)
             if return_line.count(',') == 16:
                 # valid configuration
