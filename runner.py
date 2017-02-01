@@ -77,15 +77,69 @@ def run_configuration(list_of_configurations):
 
     working_directory = "/Users/viveknair/GIT/CloudSim/CloudSim_Project/modules/cloudsim-examples/src/main/java"
     cmd = command.split(" ")
-    print command
-    print cmd
     # os.chdir(working_directory)
     # print os.getcwd()
     # os.system(command)
     p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, cwd=working_directory)
     p.wait()
     content  = [line for line in p.stdout]
-    return map(float, content[-1].split(', '))
+    return ",".join(cmd[4:] + content[-1].strip().split(', ')) + "\n"
+
+
+def generate_configuration():
+    """
+    Generates all the possible configurations and stores it in the configs.p
+    :return: None
+    """
+    allocation_policy = [1, 2, 3, 4, 5]
+    selection_policy = [1, 2, 3, 4]
+    vm_types = [1, 2, 3, 4]
+    host_types = [1, 2, 3, 4]
+    no_hosts = [10, 20, 30, 40, 50]
+    no_vms = [20, 40, 60, 80, 100]
+
+    collector_list = []
+    for alloc_policy in allocation_policy:
+        for select_policy in selection_policy:
+            for vm_type in vm_types:
+                for host_type in host_types:
+                    for no_host in no_hosts:
+                        for no_vm in no_vms:
+                            if no_vm > no_host: continue
+                            collector_list.append([alloc_policy, select_policy, no_host, no_vm, vm_type, host_type])
+
+    import pickle
+    pickle.dump(collector_list, open('Data/configs.p', 'w'))
+    print "Done"
+
+
+def append_data(line, filename="Data/collector.txt"):
+    """
+    :param line: new line to be added
+    :param filename: file where new line is appended
+    :return: None
+    """
+    with open(filename, "a") as myfile: myfile.write(line)
+
+
+def wrapper_run_configurations():
+    import pickle
+    configs = pickle.load(open('Data/configs.p', 'r'))
+    for config in configs:
+        try:
+            print config
+            return_line = run_configuration(config)
+            if return_line.count(',') == 16:
+                # valid configuration
+                append_data(return_line)
+            else:
+                # invalid configuration
+                append_data(return_line, "./Data/invalid_collector.txt")
+        except:
+            print config, " caused issues"
+            continue
 
 if __name__ == "__main__":
-    print run_configuration([1, 1, 6, 12, 4, 4])
+    # print run_configuration([1, 1, 6, 12, 4, 4])
+    # generate_configuration()
+    wrapper_run_configurations()
