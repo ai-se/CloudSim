@@ -72,8 +72,9 @@ public class RandomRunner extends RunnerAbstract {
 			int brokerId = broker.getId();
 
 			cloudletList = RandomHelper.createCloudletList(brokerId, RandomConstants.NUMBER_OF_VMS);
-			vmList = Helper.createVmList2(brokerId, RandomConstants.NUMBER_OF_VMS);
-			hostList = Helper.createHostList2(RandomConstants.NUMBER_OF_HOSTS);
+			vmList = Helper.createVmList(brokerId, RandomConstants.NUMBER_OF_VMS);
+//			System.exit(0);
+			hostList = Helper.createHostList(RandomConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");

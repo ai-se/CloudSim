@@ -27,6 +27,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.VmStateHistoryEntry;
+import org.cloudbus.cloudsim.examples.power.random.RandomConstants;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerDatacenterBroker;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -63,40 +64,22 @@ public class Helper {
 	 */
 	public static List<Vm> createVmList(int brokerId, int vmsNumber) {
 		List<Vm> vms = new ArrayList<Vm>();
-		for (int i = 0; i < vmsNumber; i++) {
-			int vmType = i / (int) Math.ceil((double) vmsNumber / Constants.VM_TYPES);
-			vms.add(new PowerVm(
-					i,
-					brokerId,
-					Constants.VM_MIPS[vmType],
-					Constants.VM_PES[vmType],
-					Constants.VM_RAM[vmType],
-					Constants.VM_BW,
-					Constants.VM_SIZE,
-					1,
-					"Xen",
-					new CloudletSchedulerDynamicWorkload(Constants.VM_MIPS[vmType], Constants.VM_PES[vmType]),
-					Constants.SCHEDULING_INTERVAL));
-		}
-		return vms;
-	}
-	
-	public static List<Vm> createVmList2(int brokerId, int vmsNumber) {
-		List<Vm> vms = new ArrayList<Vm>();
-		for (int i = 0; i < vmsNumber; i++) {
-//			int vmType = i / (int) Math.ceil((double) vmsNumber / Constants.VM_TYPES);
-			vms.add(new PowerVm(
-					i,
-					brokerId,
-					Constants.VM_MIPS[0],
-					Constants.VM_PES[0],
-					Constants.VM_RAM[0],
-					Constants.VM_BW,
-					Constants.VM_SIZE,
-					1,
-					"Xen",
-					new CloudletSchedulerDynamicWorkload(Constants.VM_MIPS[0], Constants.VM_PES[0]),
-					Constants.SCHEDULING_INTERVAL));
+		for(int vmType=0; vmType < RandomConstants.VM_DIST.length; vmType++){
+			for( int i=0; i< RandomConstants.VM_DIST[vmType]; i++){
+				System.out.println(vmType + "|" + i);
+				vms.add(new PowerVm(
+						i,
+						brokerId,
+						Constants.VM_MIPS[vmType],
+						Constants.VM_PES[vmType],
+						Constants.VM_RAM[vmType],
+						Constants.VM_BW,
+						Constants.VM_SIZE,
+						1,
+						"Xen",
+						new CloudletSchedulerDynamicWorkload(Constants.VM_MIPS[vmType], Constants.VM_PES[vmType]),
+						Constants.SCHEDULING_INTERVAL));
+			}
 		}
 		return vms;
 	}
@@ -110,45 +93,24 @@ public class Helper {
 	 */
 	public static List<PowerHost> createHostList(int hostsNumber) {
 		List<PowerHost> hostList = new ArrayList<PowerHost>();
-		for (int i = 0; i < hostsNumber; i++) {
-			int hostType = i % Constants.HOST_TYPES;
-			List<Pe> peList = new ArrayList<Pe>();
-			for (int j = 0; j < Constants.HOST_PES[hostType]; j++) {
-				peList.add(new Pe(j, new PeProvisionerSimple(Constants.HOST_MIPS[hostType])));
+		for(int hostType=0; hostType < RandomConstants.HOST_DIST.length; hostType++){
+			for (int i = 0; i < RandomConstants.HOST_DIST[hostType]; i++) {
+				List<Pe> peList = new ArrayList<Pe>();
+				for (int j = 0; j < Constants.HOST_PES[hostType]; j++) {
+					peList.add(new Pe(j, new PeProvisionerSimple(Constants.HOST_MIPS[hostType])));
+				}
+
+				hostList.add(new PowerHostUtilizationHistory(
+						i,
+						new RamProvisionerSimple(Constants.HOST_RAM[hostType]),
+						new BwProvisionerSimple(Constants.HOST_BW),
+						Constants.HOST_STORAGE,
+						peList,
+						new VmSchedulerTimeSharedOverSubscription(peList),
+						Constants.HOST_POWER[hostType]));
 			}
-
-			hostList.add(new PowerHostUtilizationHistory(
-					i,
-					new RamProvisionerSimple(Constants.HOST_RAM[hostType]),
-					new BwProvisionerSimple(Constants.HOST_BW),
-					Constants.HOST_STORAGE,
-					peList,
-					new VmSchedulerTimeSharedOverSubscription(peList),
-					Constants.HOST_POWER[hostType]));
 		}
-		return hostList;
-	}
-	
-	public static List<PowerHost> createHostList2(int hostsNumber) {
-		List<PowerHost> hostList = new ArrayList<PowerHost>();
-		for (int i = 0; i < hostsNumber; i++) {
-//			int hostType = i % Constants.HOST_TYPES;
-			int hostType = 0;
-
-			List<Pe> peList = new ArrayList<Pe>();
-			for (int j = 0; j < Constants.HOST_PES[hostType]; j++) {
-				peList.add(new Pe(j, new PeProvisionerSimple(Constants.HOST_MIPS[hostType])));
-			}
-
-			hostList.add(new PowerHostUtilizationHistory(
-					i,
-					new RamProvisionerSimple(Constants.HOST_RAM[hostType]),
-					new BwProvisionerSimple(Constants.HOST_BW),
-					Constants.HOST_STORAGE,
-					peList,
-					new VmSchedulerTimeSharedOverSubscription(peList),
-					Constants.HOST_POWER[hostType]));
-		}
+		
 		return hostList;
 	}
 

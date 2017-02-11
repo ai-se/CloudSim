@@ -56,12 +56,16 @@ public class MainRunner {
 
 	public Map<String, Double> genericRunner(String vmAllocationPolicy, String vmSelectionPolicy, String parameter,
 			int hosts, int vms, int[] vmPes, int[] vmMips, int[] vmRam, int[] hostPes, int[] hostMips, int[] hostRam,
-			int hostBw, int hostStorage, int vmBw, int hostType, int vmTypes) throws IOException {
+			int hostBw, int hostStorage, int vmBm, int hostType, int vmTypes, int[] vmDis, int[] hostDis) throws IOException {
 		
 		String workload = "random";
 		Constants.CLOUDLET_PES = 1;
 		RandomConstants.NUMBER_OF_HOSTS = hosts;
 		RandomConstants.NUMBER_OF_VMS = vms;
+		
+		RandomConstants.VM_DIST = vmDis;
+		RandomConstants.HOST_DIST = hostDis;
+		
 		Constants.VM_PES = vmPes;
 		Constants.VM_MIPS = vmMips;
 		Constants.VM_RAM = vmRam;
@@ -70,7 +74,7 @@ public class MainRunner {
 		Constants.HOST_RAM = hostRam;
 		Constants.HOST_BW = hostBw;
 		Constants.HOST_STORAGE = hostStorage;
-		Constants.VM_BW = vmBw;
+		Constants.VM_BW = vmBm;
 		Constants.HOST_TYPES = hostType;
 		Constants.VM_TYPES = vmTypes;
 		
@@ -87,7 +91,7 @@ public class MainRunner {
 		System.out.println("hostRam : " + Arrays.toString(hostRam));
 		System.out.println("hostBw : " + hostBw);
 		System.out.println("hostStorage : " + hostStorage);
-		System.out.println("vmBw : " + vmBw);
+		System.out.println("vmBm : " + vmBm);
 		System.out.println("hostType : " + hostType);
 		System.out.println("vmTypes : " + vmTypes);
 		
@@ -131,19 +135,18 @@ public class MainRunner {
 	 */
 	
 	public static void main(String[] args) throws IOException {
-		int[] vmPes = {1, 1};
-		int[] vmMips = {2500, 100};
-		int[] vmRam = {870, 1740};
-		int[] hostPes = {2, 2};
-		int[] hostMips = {1860, 5000};
-		int[] hostRam = {4096, 4096};
+		int[] vmPes = {1, 1, 1, 1};
+		int[] vmMips = {2500, 2000, 1000, 500};
+		int[] vmRam = {870, 1740, 1740, 613};
+		int[] hostPes = {2, 2, 2, 2};
+		int[] hostMips = {5000, 5000, 5000, 5000};
+		int[] hostRam = {4096, 4096, 4096, 4096};
 		
-		MainRunner runner = new MainRunner(false, false, "", "");
-		Map<String, Double> objectives = new HashMap<String,Double>();
-		objectives = runner.genericRunner("lr", "mu", "1.393674679793466", 49, 97, vmPes, vmMips, vmRam, hostPes, hostMips, hostRam, 870291, 1074982, 129904, 2, 2);
+		int [] vmDis = {15,25, 24, 16};
+		int [] hostDis = {5,15, 13, 7};
 		
-		System.out.println(objectives.get(ENERGY_CONSUMPTION) + ", " + 
-		objectives.get(AVERAGE_SLA) + ", " + objectives.get(MEAN_HOST_SHUTDOWN_TIME));
+		MainRunner runner = new MainRunner(true, false, "", "");
+		runner.genericRunner("lr", "mu", "1.393674679793466", 40, 80, vmPes, vmMips, vmRam, hostPes, hostMips, hostRam, 870291, 1074982, 129904, 4, 4, vmDis, hostDis);
 		
 	
 	}

@@ -133,48 +133,74 @@ public class ConfigRunner {
 	 */
 	
 	public static void main(String[] args) throws IOException {
+		
+		int[] vmPes = {1, 1, 1, 1};
+		int[] vmMips = {2500, 2000, 1000, 500};
+		int[] vmRam = {870, 1740, 1740, 613};
+		int[] hostPes = {2, 2, 2, 2};
+		int[] hostMips = {5000, 5000, 5000, 5000};
+		int[] hostRam = {4096, 4096, 4096, 4096};
+		
+		int [] vmDis = {15,25, 24, 16};
+		int [] hostDis = {5,15, 13, 7};
+		
+		
 		// invoke model here
-				MainRunner runner = new MainRunner(false, false, "", "");
-				String vmAllocationPolicy = args[0];
-				String vmSelectionPolicy = args[1];
-				double parameter = Double.parseDouble(args[2]);
-				int hosts = Integer.parseInt(args[3]);
-				int vms = Integer.parseInt(args[4]);
-				int[] vmPes = { Integer.parseInt(args[5]) };
-				int[] vmMips = { Integer.parseInt(args[6]) };
-				int[] vmRam = { Integer.parseInt(args[7]) };
-				int[] hostPes = { Integer.parseInt(args[8]) };
-				int[] hostMips = { Integer.parseInt(args[9]) };
-				int[] hostRam = { Integer.parseInt(args[10]) };
-				int actualVmType = 1;
-				int actualHostType = 1;
+		MainRunner runner = new MainRunner(false, false, "", "");
+		String vmAllocationPolicy = args[0];
+		String vmSelectionPolicy = args[1];
+		double parameter = Double.parseDouble(args[2]);
+		int hosts = Integer.parseInt(args[3]);
+		int vms = Integer.parseInt(args[4]);
+		int actualVmType = 4;
+		int actualHostType = 4;
 
 
-				int vmBw = Integer.parseInt(args[11]);
-				int hostBw = Integer.parseInt(args[12]);
-				int hostStorage = Integer.parseInt(args[13]);
+		int vmBw = Integer.parseInt(args[5]);
+		int hostBw = Integer.parseInt(args[6]);
+		int hostStorage = Integer.parseInt(args[7]);
+		
+//		int vm_dist_1 = Integer.parseInt(args[8]);
+//		int vm_dist_2 = Integer.parseInt(args[9]);
+//		int vm_dist_3 = Integer.parseInt(args[10]);
+//		int vm_dist_4 = Integer.parseInt(args[11]);
+		
+		int [] vm_dist = {
+				Integer.parseInt(args[8]),
+				Integer.parseInt(args[9]),
+				Integer.parseInt(args[10]),
+				Integer.parseInt(args[11])	
+		};
+		
+		int[] h_dist = {
+				Integer.parseInt(args[12]),
+				Integer.parseInt(args[13]),
+				Integer.parseInt(args[14]),
+				Integer.parseInt(args[15])	
+		};
 
-				try {
-					if (vms <= 2 * hosts) {
-						// Do nothing
-					} else {
-						vms = 2 * hosts;
-					}
-					Map<String, Double> objectives = runner.genericRunner(vmAllocationPolicy,
-							vmSelectionPolicy, parameter + "", hosts, vms, vmPes,
-							vmMips, vmRam, hostPes, hostMips, hostRam, hostBw, hostStorage, vmBw, actualHostType,
-							actualVmType);
-				System.out.println(objectives.get(ENERGY_CONSUMPTION) + ", " + 
-							objectives.get(AVERAGE_SLA) + ", " + objectives.get(MEAN_HOST_SHUTDOWN_TIME));
-					
-				} catch (IOException e) {
-					System.out.println("Something falied in the model :");
-					e.printStackTrace();
-				}
+		try {
+			if (vms <= 2 * hosts) {
+				// Do nothing
+			} else {
+				vms = 2 * hosts;
+			}
+			Map<String, Double> objectives = runner.genericRunner(vmAllocationPolicy,
+					vmSelectionPolicy, parameter + "", hosts, vms, vmPes,
+					vmMips, vmRam, hostPes, hostMips, hostRam, hostBw, hostStorage, vmBw, actualHostType,
+					actualVmType, vm_dist, h_dist);
+		System.out.println(objectives.get(ENERGY_CONSUMPTION) + ", " + 
+					objectives.get(AVERAGE_SLA) + ", " + objectives.get(MEAN_HOST_SHUTDOWN_TIME));
+			
+		} catch (IOException e) {
+			System.out.println("Something falied in the model :");
+			e.printStackTrace();
+		}
 
 		
 	
 	}
+	
 
 	
 	

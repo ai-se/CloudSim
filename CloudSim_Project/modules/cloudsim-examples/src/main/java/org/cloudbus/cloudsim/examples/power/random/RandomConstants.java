@@ -17,6 +17,9 @@ public class RandomConstants {
 	public static int NUMBER_OF_VMS = 97;
 
 	public static int NUMBER_OF_HOSTS = 49;
+	
+	public static int [] VM_DIST = {};
+	public static int [] HOST_DIST = {};
 
 	public final static long CLOUDLET_UTILIZATION_SEED = 1;
 
