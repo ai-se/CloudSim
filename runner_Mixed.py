@@ -172,8 +172,8 @@ def wrapper_run_configurations():
         # try:
             print i, config
             return_line = run_configuration(config)
-            # print return_line, return_line.count(',')
-            if return_line.count(',') == 16:
+
+            if return_line.count(',') == 18:
                 # valid configuration
                 append_data(return_line)
             else:
