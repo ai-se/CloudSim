@@ -71,6 +71,7 @@ public class PlanetLabRunner extends RunnerAbstract {
 			cloudletList = PlanetLabHelper.createCloudletListPlanetLab(brokerId, inputFolder);
 			vmList = Helper.createVmList(brokerId, cloudletList.size());
 			hostList = Helper.createHostList(PlanetLabConstants.NUMBER_OF_HOSTS);
+			System.out.println("sdasdsa: " + hostList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");

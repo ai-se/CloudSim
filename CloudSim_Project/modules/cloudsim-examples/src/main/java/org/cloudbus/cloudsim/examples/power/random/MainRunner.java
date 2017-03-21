@@ -16,6 +16,8 @@ public class MainRunner {
 	public static final String ENERGY_CONSUMPTION = "energy";
 	public static final String AVERAGE_SLA = "sla";
 	public static final String MEAN_HOST_SHUTDOWN_TIME = "shutdown";
+	public static final String OVERALL_SLA = "overall_sla";
+	
 
 	private static boolean enableOutput;
 	private static boolean outputToFile;
@@ -56,12 +58,14 @@ public class MainRunner {
 
 	public Map<String, Double> genericRunner(String vmAllocationPolicy, String vmSelectionPolicy, String parameter,
 			int hosts, int vms, int[] vmPes, int[] vmMips, int[] vmRam, int[] hostPes, int[] hostMips, int[] hostRam,
-			int hostBw, int hostStorage, int vmBm, int hostType, int vmTypes, int[] vmDis, int[] hostDis) throws IOException {
+			int hostBw, int hostStorage, int vmBm, int hostType, int vmTypes, int[] vmDis, int[] hostDis, int noCloudlets) throws IOException {
 		
 		String workload = "random";
 		Constants.CLOUDLET_PES = 1;
 		RandomConstants.NUMBER_OF_HOSTS = hosts;
+		System.out.println("vms:: " + vms);
 		RandomConstants.NUMBER_OF_VMS = vms;
+		RandomConstants.NUMBER_OF_CLOUDLETS = noCloudlets;
 		
 		RandomConstants.VM_DIST = vmDis;
 		RandomConstants.HOST_DIST = hostDis;
@@ -78,22 +82,24 @@ public class MainRunner {
 		Constants.HOST_TYPES = hostType;
 		Constants.VM_TYPES = vmTypes;
 		
-		System.out.println("Host :" + RandomConstants.NUMBER_OF_HOSTS);
-		System.out.println("VM : " + RandomConstants.NUMBER_OF_VMS);
-		System.out.println("Parameter : " + parameter);
-		System.out.println("vmAllocationPolicy : " + vmAllocationPolicy);
-		System.out.println("vmSelectionPolicy : " + vmSelectionPolicy);
-		System.out.println("vmPes : " + Arrays.toString(vmPes));
-		System.out.println("vmMips : " + Arrays.toString(vmMips));
-		System.out.println("vmRam : " + Arrays.toString(vmRam));
-		System.out.println("hostPes : " + Arrays.toString(hostPes));
-		System.out.println("hostMips : " + Arrays.toString(hostMips));
-		System.out.println("hostRam : " + Arrays.toString(hostRam));
-		System.out.println("hostBw : " + hostBw);
-		System.out.println("hostStorage : " + hostStorage);
-		System.out.println("vmBm : " + vmBm);
-		System.out.println("hostType : " + hostType);
-		System.out.println("vmTypes : " + vmTypes);
+//		System.out.println("Host :" + RandomConstants.NUMBER_OF_HOSTS);
+//		System.out.println("VM : " + RandomConstants.NUMBER_OF_VMS);
+//		System.out.println("Parameter : " + parameter);
+//		System.out.println("vmAllocationPolicy : " + vmAllocationPolicy);
+//		System.out.println("vmSelectionPolicy : " + vmSelectionPolicy);
+//		System.out.println("vmPes : " + Arrays.toString(vmPes));
+//		System.out.println("vmMips : " + Arrays.toString(vmMips));
+//		System.out.println("vmRam : " + Arrays.toString(vmRam));
+//		System.out.println("hostPes : " + Arrays.toString(hostPes));
+//		System.out.println("hostMips : " + Arrays.toString(hostMips));
+//		System.out.println("hostRam : " + Arrays.toString(hostRam));
+//		System.out.println("hostBw : " + hostBw);
+//		System.out.println("hostStorage : " + hostStorage);
+//		System.out.println("vmBm : " + vmBm);
+//		System.out.println("hostType : " + hostType);
+//		System.out.println("vmTypes : " + vmTypes);
+//		System.out.println("noCloudlets : " + noCloudlets);
+
 		
 		long start = System.currentTimeMillis();
 		RandomRunner runner = new RandomRunner(enableOutput, outputToFile, inputFolder, outputFolder, workload,
@@ -108,6 +114,9 @@ public class MainRunner {
 		double slaAverage = slaMetrics.get("average");
 		objectiveScores.put(AVERAGE_SLA, slaAverage);
 		
+		double slaOverall = slaMetrics.get("overall");
+		objectiveScores.put(OVERALL_SLA, slaOverall);
+		
 		List<Double> timeBeforeHostShutdown = Helper.getTimesBeforeHostShutdown(datacenter.getHostList());
 		
 		double meanTimeBeforeHostShutdown = Double.NaN;
@@ -119,10 +128,14 @@ public class MainRunner {
 		double energy = datacenter.getPower() / (3600 * 1000);
 		
 		objectiveScores.put(ENERGY_CONSUMPTION, energy);
-		if (objectiveScores.size() > 0)
+		if (objectiveScores.size() > 0){
+			System.out.println("S");
 			return objectiveScores;
-		else
+		}
+		else{
+			System.out.println("SA");
 			return null;
+		}
 	}
 
 	/**
@@ -146,7 +159,7 @@ public class MainRunner {
 		int [] hostDis = {5,15, 13, 7};
 		
 		MainRunner runner = new MainRunner(true, false, "", "");
-		runner.genericRunner("lr", "mu", "1.393674679793466", 40, 80, vmPes, vmMips, vmRam, hostPes, hostMips, hostRam, 870291, 1074982, 129904, 4, 4, vmDis, hostDis);
+		runner.genericRunner("lr", "mu", "1.393674679793466", 40, 80, vmPes, vmMips, vmRam, hostPes, hostMips, hostRam, 870291, 1074982, 129904, 4, 4, vmDis, hostDis, 80);
 		
 	
 	}

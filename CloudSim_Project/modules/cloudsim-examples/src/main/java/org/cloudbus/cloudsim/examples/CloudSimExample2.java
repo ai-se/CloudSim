@@ -13,8 +13,10 @@ package org.cloudbus.cloudsim.examples;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -30,10 +32,12 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.VmStateHistoryEntry;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.cloudbus.cloudsim.util.MathUtil;
 
 
 /**
@@ -138,7 +142,7 @@ public class CloudSimExample2 {
 	            	// Sixth step: Starts the simulation
 	            	CloudSim.startSimulation();
 
-
+        			
 	            	// Final step: Print results when simulation is over
 	            	List<Cloudlet> newList = broker.getCloudletReceivedList();
 
@@ -260,4 +264,66 @@ public class CloudSimExample2 {
 	        }
 
 	    }
+	    
+	    public static Map<String, Double> getSlaMetrics(List<Vm> vms) {
+			Map<String, Double> metrics = new HashMap<String, Double>();
+			List<Double> slaViolation = new LinkedList<Double>();
+			double totalAllocated = 0;
+			double totalRequested = 0;
+			double totalUnderAllocatedDueToMigration = 0;
+
+			for (Vm vm : vms) {
+				double vmTotalAllocated = 0;
+				double vmTotalRequested = 0;
+				double vmUnderAllocatedDueToMigration = 0;
+				double previousTime = -1;
+				double previousAllocated = 0;
+				double previousRequested = 0;
+				boolean previousIsInMigration = false;
+
+				for (VmStateHistoryEntry entry : vm.getStateHistory()) {
+					if (previousTime != -1) {
+						double timeDiff = entry.getTime() - previousTime;
+						vmTotalAllocated += previousAllocated * timeDiff;
+						vmTotalRequested += previousRequested * timeDiff;
+
+						if (previousAllocated < previousRequested) {
+							slaViolation.add((previousRequested - previousAllocated) / previousRequested);
+							if (previousIsInMigration) {
+								vmUnderAllocatedDueToMigration += (previousRequested - previousAllocated)
+										* timeDiff;
+							}
+						}
+					}
+
+					previousAllocated = entry.getAllocatedMips();
+					previousRequested = entry.getRequestedMips();
+					previousTime = entry.getTime();
+					previousIsInMigration = entry.isInMigration();
+				}
+				System.out.println("previousAllocated: " + previousAllocated);
+				System.out.println("previousRequested: " + previousRequested);
+
+				totalAllocated += vmTotalAllocated;
+				totalRequested += vmTotalRequested;
+				totalUnderAllocatedDueToMigration += vmUnderAllocatedDueToMigration;
+			}
+			
+			System.out.println("totalAllocated: " + totalAllocated);
+			System.out.println("totalRequested: " + totalRequested);
+
+			metrics.put("overall", (totalRequested - totalAllocated) / totalRequested);
+			if (slaViolation.isEmpty()) {
+				metrics.put("average", 0.);
+			} else {
+				metrics.put("average", MathUtil.mean(slaViolation));
+			}
+			metrics.put("underallocated_migration", totalUnderAllocatedDueToMigration / totalRequested);
+			// metrics.put("sla_time_per_vm_with_migration", slaViolationTimePerVmWithMigration /
+			// totalTime);
+			// metrics.put("sla_time_per_vm_without_migration", slaViolationTimePerVmWithoutMigration /
+			// totalTime);
+
+			return metrics;
+		}
 }

@@ -70,8 +70,7 @@ public class RandomRunner extends RunnerAbstract {
 
 			broker = Helper.createBroker();
 			int brokerId = broker.getId();
-
-			cloudletList = RandomHelper.createCloudletList(brokerId, RandomConstants.NUMBER_OF_VMS);
+			cloudletList = RandomHelper.createCloudletList(brokerId, RandomConstants.NUMBER_OF_CLOUDLETS);
 			vmList = Helper.createVmList(brokerId, RandomConstants.NUMBER_OF_VMS);
 //			System.exit(0);
 			hostList = Helper.createHostList(RandomConstants.NUMBER_OF_HOSTS);

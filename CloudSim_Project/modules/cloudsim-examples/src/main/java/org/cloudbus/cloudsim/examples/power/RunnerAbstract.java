@@ -155,6 +155,8 @@ public abstract class RunnerAbstract {
 
 			File file = new File(outputFolder + "/log/"
 					+ getExperimentName(workload, vmAllocationPolicy, vmSelectionPolicy, parameter) + ".txt");
+			System.out.println(outputFolder+ "/log/"
+					+ getExperimentName(workload, vmAllocationPolicy, vmSelectionPolicy, parameter) + ".txt");
 			file.createNewFile();
 			Log.setOutput(new FileOutputStream(file));
 		}
@@ -177,7 +179,7 @@ public abstract class RunnerAbstract {
 	 */
 	protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy) {
 		System.out.println("Starting " + experimentName);
-
+		System.out.println(hostList.size());
 		try {
 			PowerDatacenter datacenter = (PowerDatacenter) Helper.createDatacenter(
 					"Datacenter",

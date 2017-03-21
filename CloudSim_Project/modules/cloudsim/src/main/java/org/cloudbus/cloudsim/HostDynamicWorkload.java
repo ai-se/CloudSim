@@ -76,7 +76,7 @@ public class HostDynamicWorkload extends Host {
 			double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(vm);
 
 			if (!Log.isDisabled()) {
-				Log.formatLine(
+				/*Log.formatLine(
 						"%.2f: [Host #" + getId() + "] Total allocated MIPS for VM #" + vm.getId()
 								+ " (Host #" + vm.getHost().getId()
 								+ ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)",
@@ -84,7 +84,7 @@ public class HostDynamicWorkload extends Host {
 						totalAllocatedMips,
 						totalRequestedMips,
 						vm.getMips(),
-						totalRequestedMips / vm.getMips() * 100);
+						totalRequestedMips / vm.getMips() * 100);*/
 
 				List<Pe> pes = getVmScheduler().getPesAllocatedForVM(vm);
 				StringBuilder pesString = new StringBuilder();
@@ -98,7 +98,6 @@ public class HostDynamicWorkload extends Host {
 								+ pesString,
 						CloudSim.clock());
 			}
-
 			if (getVmsMigratingIn().contains(vm)) {
 				Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId()
 						+ " is being migrated to Host #" + getId(), CloudSim.clock());

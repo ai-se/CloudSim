@@ -59,9 +59,14 @@ def run_configuration(list_of_configurations):
     h3 = str(list_of_configurations[10])
     h4 = str(list_of_configurations[11])
 
-
-
-    command = "java -cp $CLASSPATH org/cloudbus/cloudsim/examples/power/random/ConfigRunner " \
+    command = "java -Dfile.encoding=UTF-8 " \
+              "-classpath \"/Users/viveknair/GIT/CloudSim/CloudSim_Project/bin:" \
+              "/Users/viveknair/Research/CloudSim/Software/commons-math3-3.6.1/commons-math3-3.6.1.jar:" \
+              "/Users/viveknair/GIT/fss16dst/project/dependency/easymock-3.0 2.jar:" \
+              "/Users/viveknair/Research/CloudSim/Software/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar:" \
+              "/Users/viveknair/Research/CloudSim/Software/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar:" \
+              "/Users/viveknair/GIT/fss16dst/project/dependency/opencsv-3.3.jar\" " \
+              "org.cloudbus.cloudsim.examples.power.random.ConfigRunner " \
               + vm_allocation_policy + " "\
               + vm_selection_policy + " "\
             + str(PARAMETER) + " "\
@@ -77,16 +82,17 @@ def run_configuration(list_of_configurations):
             + h1 + " "\
             + h2 + " "\
             + h3 + " "\
-            + h4
+            + h4 + " 1000"
     working_directory = "/Users/viveknair/GIT/CloudSim/CloudSim_Project/modules/cloudsim-examples/src/main/java"
     cmd = command.split(" ")
     # os.chdir(working_directory)
     # print os.getcwd()
     # os.system(command)
+
     p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, cwd=working_directory)
     p.wait()
     content  = [line for line in p.stdout]
-    return ",".join(cmd[4:] + content[-1].strip().split(', ')) + "\n"
+    return ",".join(cmd[6:] + content[-1].strip().split(', ')) + "\n"
 
 
 def generate_configuration():
@@ -156,7 +162,7 @@ def generate_configuration():
     print "Done ", len(collector_list)
 
 
-def append_data(line, filename="Data_Mixed/collector.txt"):
+def append_data(line, filename="Data_Mixed/big_spike_collector.txt"):
     """
     :param line: new line to be added
     :param filename: file where new line is appended
@@ -167,13 +173,13 @@ def append_data(line, filename="Data_Mixed/collector.txt"):
 
 def wrapper_run_configurations():
     import pickle
-    configs = pickle.load(open('Data_Mixed/configs.p', 'r'))
+    configs = pickle.load(open('./Data_Mixed/configs.p', 'r'))
     for i, config in enumerate(configs):
         # try:
             print i, config
             return_line = run_configuration(config)
 
-            if return_line.count(',') == 18:
+            if return_line.count(',') == 20:
                 # valid configuration
                 append_data(return_line)
             else:

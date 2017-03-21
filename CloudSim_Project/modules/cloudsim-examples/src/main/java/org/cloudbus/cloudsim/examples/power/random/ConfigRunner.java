@@ -18,6 +18,7 @@ public class ConfigRunner {
 	public static final String ENERGY_CONSUMPTION = "energy";
 	public static final String AVERAGE_SLA = "sla";
 	public static final String MEAN_HOST_SHUTDOWN_TIME = "shutdown";
+	public static final String OVERALL_SLA = "overall_sla";
 
 	private static boolean enableOutput;
 	private static boolean outputToFile;
@@ -144,9 +145,8 @@ public class ConfigRunner {
 		int [] vmDis = {15,25, 24, 16};
 		int [] hostDis = {5,15, 13, 7};
 		
-		
 		// invoke model here
-		MainRunner runner = new MainRunner(false, false, "", "");
+		MainRunner runner = new MainRunner(true, true, "", "/Users/viveknair/GIT/CloudSim/CloudSim_Project/modules/output");
 		String vmAllocationPolicy = args[0];
 		String vmSelectionPolicy = args[1];
 		double parameter = Double.parseDouble(args[2]);
@@ -178,6 +178,8 @@ public class ConfigRunner {
 				Integer.parseInt(args[14]),
 				Integer.parseInt(args[15])	
 		};
+		int noClients = Integer.parseInt(args[16]);
+
 
 		try {
 			if (vms <= 2 * hosts) {
@@ -188,9 +190,10 @@ public class ConfigRunner {
 			Map<String, Double> objectives = runner.genericRunner(vmAllocationPolicy,
 					vmSelectionPolicy, parameter + "", hosts, vms, vmPes,
 					vmMips, vmRam, hostPes, hostMips, hostRam, hostBw, hostStorage, vmBw, actualHostType,
-					actualVmType, vm_dist, h_dist);
+					actualVmType, vm_dist, h_dist, noClients);
+			System.out.println("S");
 		System.out.println(objectives.get(ENERGY_CONSUMPTION) + ", " + 
-					objectives.get(AVERAGE_SLA) + ", " + objectives.get(MEAN_HOST_SHUTDOWN_TIME));
+					objectives.get(AVERAGE_SLA) + ", " + objectives.get(MEAN_HOST_SHUTDOWN_TIME) + ", " + objectives.get(OVERALL_SLA));
 			
 		} catch (IOException e) {
 			System.out.println("Something falied in the model :");

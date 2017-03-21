@@ -45,6 +45,9 @@ public class PlanetLabHelper {
 
 		File inputFolder = new File(inputFolderName);
 		File[] files = inputFolder.listFiles();
+		
+		System.out.println("inputFolder: " + inputFolder + " size: " + files.length);
+		
 
 		for (int i = 0; i < files.length; i++) {
 			Cloudlet cloudlet = null;

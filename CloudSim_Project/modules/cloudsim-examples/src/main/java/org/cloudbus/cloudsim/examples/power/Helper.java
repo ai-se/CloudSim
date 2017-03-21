@@ -78,7 +78,7 @@ public class Helper {
 						1,
 						"Xen",
 						new CloudletSchedulerDynamicWorkload(Constants.VM_MIPS[vmType], Constants.VM_PES[vmType]),
-						Constants.SCHEDULING_INTERVAL));
+						500));
 			}
 		}
 		return vms;
@@ -93,6 +93,7 @@ public class Helper {
 	 */
 	public static List<PowerHost> createHostList(int hostsNumber) {
 		List<PowerHost> hostList = new ArrayList<PowerHost>();
+		System.out.println("HOST_DIST: " + RandomConstants.HOST_DIST.length);
 		for(int hostType=0; hostType < RandomConstants.HOST_DIST.length; hostType++){
 			for (int i = 0; i < RandomConstants.HOST_DIST[hostType]; i++) {
 				List<Pe> peList = new ArrayList<Pe>();
@@ -579,7 +580,6 @@ public class Helper {
 			double previousAllocated = 0;
 			double previousRequested = 0;
 			boolean previousIsInMigration = false;
-
 			for (VmStateHistoryEntry entry : vm.getStateHistory()) {
 				if (previousTime != -1) {
 					double timeDiff = entry.getTime() - previousTime;
@@ -600,6 +600,8 @@ public class Helper {
 				previousTime = entry.getTime();
 				previousIsInMigration = entry.isInMigration();
 			}
+//			System.out.println("vmTotalAllocated: " + vmTotalAllocated);
+//			System.out.println("totalRequested: " + totalRequested);
 
 			totalAllocated += vmTotalAllocated;
 			totalRequested += vmTotalRequested;

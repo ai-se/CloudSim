@@ -18,6 +18,8 @@ public class RandomConstants {
 
 	public static int NUMBER_OF_HOSTS = 49;
 	
+	public static int NUMBER_OF_CLOUDLETS = 10;
+	
 	public static int [] VM_DIST = {};
 	public static int [] HOST_DIST = {};
 
