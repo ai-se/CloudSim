@@ -1,3 +1,1 @@
-real	959m20.817s
-user	2155m39.753s
-sys	114m15.577s
+This contains all the data for all the configurations for a specific workload. These datasets took 50 days of compute time to collect

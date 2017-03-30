@@ -135,7 +135,7 @@ public class ConfigRunner {
 	
 	public static void main(String[] args) throws IOException {
 		
-		int[] vmPes = {1, 1, 1, 1};
+		int[] vmPes = {2, 1, 1, 1};
 		int[] vmMips = {2500, 2000, 1000, 500};
 		int[] vmRam = {870, 1740, 1740, 613};
 		int[] hostPes = {2, 2, 2, 2};
@@ -146,7 +146,7 @@ public class ConfigRunner {
 		int [] hostDis = {5,15, 13, 7};
 		
 		// invoke model here
-		MainRunner runner = new MainRunner(true, true, "", "/Users/viveknair/GIT/CloudSim/CloudSim_Project/modules/output");
+		MainRunner runner = new MainRunner(false, false, "", "");
 		String vmAllocationPolicy = args[0];
 		String vmSelectionPolicy = args[1];
 		double parameter = Double.parseDouble(args[2]);
